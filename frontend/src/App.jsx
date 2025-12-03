@@ -1,44 +1,57 @@
-import React, { useState } from "react";
+// src/App.jsx
+import React from "react";
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { AuthProvider, useAuth } from "./AuthContext";
+import SignUp from "./pages/SignUp";
+import SignIn from "./pages/SignIn";
+import ProtectedRoute from "./ProtectedRoute";
 import TaskForm from "./components/TaskForm";
 import TaskList from "./components/TaskList";
 
-export default function App() {
-  const [tasks, setTasks] = useState([]);
-
-  const addTask = (task) => {
-    // give each task a simple id
-    const newTask = {
-      id: Date.now(),
-      title: task.title,
-      description: task.description,
-      completed: false,
-    };
-    setTasks((prev) => [newTask, ...prev]);
-  };
-
-  const toggleTask = (id) => {
-    setTasks((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t))
-    );
-  };
-
-  const deleteTask = (id) => {
-    setTasks((prev) => prev.filter((t) => t.id !== id));
-  };
+function NavBar() {
+  const { user, logout } = useAuth();
 
   return (
-    <div className="app-container">
-      <h1 className="app-title">Task Manager</h1>
+    <nav className="nav">
+      <Link to="/">Home</Link>
+      {!user && <Link to="/signup">Sign Up</Link>}
+      {!user && <Link to="/signin">Sign In</Link>}
+      {user && (
+        <>
+          <span className="welcome">Welcome, {user.fullname}</span>
+          <button onClick={logout} className="btn-logout">
+            Logout
+          </button>
+        </>
+      )}
+    </nav>
+  );
+}
 
-      <TaskForm onAddTask={addTask} />
+export default function App() {
+  return (
+    <AuthProvider>
+      <BrowserRouter>
+        <NavBar />
 
-      <hr className="divider" />
-
-      <TaskList
-        tasks={tasks}
-        onToggleTask={toggleTask}
-        onDeleteTask={deleteTask}
-      />
-    </div>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <div className="app-container">
+                  <h1 className="app-title">Task Manager</h1>
+                  <TaskForm />
+                  <hr className="divider" />
+                  <TaskList />
+                </div>
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/signin" element={<SignIn />} />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }

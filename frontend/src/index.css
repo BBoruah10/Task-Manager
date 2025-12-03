@@ -113,3 +113,47 @@ body {
   flex-direction: column;
   gap: 6px;
 }
+/* auth + nav styles */
+.nav {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 12px;
+  background: #ffffff;
+  border-bottom: 1px solid #eee;
+}
+
+.nav a {
+  text-decoration: none;
+  color: #333;
+}
+
+.welcome {
+  margin-left: 12px;
+  font-weight: 600;
+}
+
+.btn-logout {
+  margin-left: 8px;
+}
+
+.auth-container {
+  max-width: 420px;
+  margin: 40px auto;
+  padding: 20px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+.auth-container input {
+  display: block;
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 10px;
+}
+
+.error-text {
+  color: #b91c1c;
+  margin-top: 8px;
+}
